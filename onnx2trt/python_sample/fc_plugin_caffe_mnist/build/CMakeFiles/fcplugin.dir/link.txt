@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -Wno-deprecated-declarations  -shared -Wl,-soname,libfcplugin.so -o libfcplugin.so CMakeFiles/fcplugin.dir/plugin/FullyConnected.cpp.o -Wl,-rpath,/usr/local/cuda-10.2/lib64 -lnvinfer_plugin /usr/local/cuda-10.2/lib64/libcudart.so -lcudnn -lcublas -lnvinfer 

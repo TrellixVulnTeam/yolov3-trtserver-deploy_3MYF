@@ -1,0 +1,3 @@
+/opt/tensorrt/samples/python/fc_plugin_caffe_mnist/build/CMakeFiles/rebuild_cache.dir
+/opt/tensorrt/samples/python/fc_plugin_caffe_mnist/build/CMakeFiles/fcplugin.dir
+/opt/tensorrt/samples/python/fc_plugin_caffe_mnist/build/CMakeFiles/edit_cache.dir
