@@ -11,11 +11,13 @@
 - `tensorflow-gpu==1.15.0`
 
 ## Docker
-`docker pull zldrobit/onnx:10.0-cudnn7-devel`
-`docker pull yingchao126/tensorrt_plugin:7.0`
-`docker pull yingchao126/tensorrtserver:20.02-py3`
+- `docker pull zldrobit/onnx:10.0-cudnn7-devel`
+- `docker pull yingchao126/tensorrt_plugin:7.0`
+- `docker pull yingchao126/tensorrtserver:20.02-py3`
 
 ## Usage
+
+### darknet2onnx : get onnx model file in container onnx:10.0-cudnn7-devel
 - **1. Download pretrained Darknet weights:**
 ```
 cd weights
@@ -31,32 +33,16 @@ Change `ONNX_EXPORT` to `True` in `models.py`. Run
 ```
 python3 detect.py --cfg cfg/yolov3.cfg --weights weights/yolov3.weights
 ```
+```
 The output ONNX file is `weights/export.onnx`.
+image:batchx416x416x3 output0:batchx10647x1x4 output1:batchx10647x3
+```
 
-- **3. Convert ONNX model to TensorFlow model:**
+### trtBatchNms : build tensorrt batchnms-plugin in container yingchao126/tensorrt_plugin:7.0
+- **1. Download pretrained Darknet weights:**
 ```
-python3 onnx2tf.py
-``` 
-The output file is `weights/yolov3.pb`.
 
-- **4. Preprocess pb file to avoid NCHW conv, 5-D ops, and Int64 ops:**
-```
-python3 prep.py
-``` 
-The output file is `weights/yolov3_prep.pb`.
 
-- **5. Use TOCO to convert pb -> tflite:**
-```
-toco --graph_def_file weights/yolov3_prep.pb \
-    --output_file weights/yolov3.tflite \
-    --output_format TFLITE \
-    --inference_type FLOAT \
-    --inference_input_type FLOAT \
-    --input_arrays input.1 \
-    --output_arrays concat_84
-```
-The output file is `weights/yolov3.tflite`.
-Now, you can run `python3 tflite_detect.py` to detect objects in an image.
 
 ## Quantization
 - **1. Install flatbuffers:**
