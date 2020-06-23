@@ -1,6 +1,5 @@
 ## Introduction
-A Conversion tool to convert YOLO v3 Darknet weights to TF Lite model
-(YOLO v3 in PyTorch > ONNX > TensorFlow > TF Lite).
+ A complete project for yolov3 deployment on tensorrt-inference-server
 
 ## Prerequisites
 - `python3`
@@ -8,17 +7,23 @@ A Conversion tool to convert YOLO v3 Darknet weights to TF Lite model
 - `torchvision==0.4.2`
 - `onnx==1.6.0`
 - `onnx-tf==1.5.0`
-- `onnxruntime-gpu==1.0.0`
+- `onnxruntime-gpu==1.0.0` 
 - `tensorflow-gpu==1.15.0`
 
 ## Docker
 `docker pull zldrobit/onnx:10.0-cudnn7-devel`
+`docker pull yingchao126/tensorrt_plugin:7.0`
+`docker pull yingchao126/tensorrtserver:20.02-py3`
 
 ## Usage
 - **1. Download pretrained Darknet weights:**
 ```
 cd weights
 wget https://pjreddie.com/media/files/yolov3.weights 
+```
+```
+you can also use darknet proj train your custom models
+
 ```
 
 - **2. Convert YOLO v3 model from Darknet weights to ONNX model:** 
