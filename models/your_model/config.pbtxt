@@ -1,0 +1,47 @@
+name: "your_model"
+platform: "tensorrt_plan"
+max_batch_size : 64
+input [
+  {
+    name: "image"
+    data_type: TYPE_FP32
+    format: FORMAT_NCHW
+    dims: [416, 416, 3]
+  }
+]
+output [
+  {
+    name: "num_detections"
+    data_type: TYPE_INT32
+    dims: [1]
+  },
+  {
+    name: "detection_boxes"
+    data_type: TYPE_FP32
+    dims: [100, 4]
+  },
+  {
+    name: "detection_scores"
+    data_type: TYPE_FP32
+    dims: [100]
+  },
+  {
+    name: "detection_classes"
+    data_type: TYPE_FP32
+    dims: [100]
+  }
+]
+instance_group [
+  {
+    count: 1
+    kind: KIND_GPU
+  }
+]
+
+version_policy: { all { }}
+
+dynamic_batching {
+  preferred_batch_size: [1, 2, 4, 8, 16, 32, 64]
+  #preferred_batch_size: [1]
+  max_queue_delay_microseconds: 10000
+}
