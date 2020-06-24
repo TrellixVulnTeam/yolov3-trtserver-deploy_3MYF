@@ -39,66 +39,20 @@ image:batchx416x416x3 output0:batchx10647x1x4 output1:batchx10647x3
 ```
 
 ### trtBatchNms : build tensorrt batchnms-plugin in container yingchao126/tensorrt_plugin:7.0
-- **1. Download pretrained Darknet weights:**
+- **1. copy custom_plugin_dynamicshape project to container get the libNMSPlugin.so:**
 ```
+cd your_path/custom_plugin_dynamicshape
+mkdir build && cd build && cmake .. && make
+```
+- **2. copy onnx2trt project to container get the model.engine:**
+```
+cd your_path/onnx2trt
+edit the onnx_yolov3.py file where appoint classnum 
+then exec the onnx_yolov3.py script
+```
+### trtBatchNms : build tensorrt batchnms-plugin in container yingchao126/tensorrt_plugin:7.0
 
 
-
-## Quantization
-- **1. Install flatbuffers:**
-Please refer to [flatbuffers](https://google.github.io/flatbuffers/flatbuffers_guide_building.html).
-
-- **2. Download TFLite schema:**
-```
-wget https://github.com/tensorflow/tensorflow/raw/r1.15/tensorflow/lite/schema/schema.fbs
-```
-
-- **3. Run TOCO to convert and quantize pb -> tflite:**
-```
-toco --graph_def_file weights/yolov3_prep.pb \
-    --output_file weights/yolov3_quant.tflite \
-    --output_format TFLITE  \
-    --input_arrays input.1 \
-    --output_arrays concat_84 \
-    --post_training_quantize
-```
-The output file is `weights/yolov3_quant.tflite`.
-
-- **4. Convert tflite -> json:**
-```
-flatc -t --strict-json --defaults-json -o weights schema.fbs  -- weights/yolov3_quant.tflite
-```
-The output file is `weights/yolov3_quant.json`.
-
-- **5. Fix ReshapeOptions:**
-```
-python3 fix_reshape.py
-```
-The output file is `weights/yolov3_quant_fix_reshape.json`.
-
-- **6. Convert json -> tflite:**
-```
-flatc -b -o weights schema.fbs weights/yolov3_quant_fix_reshape.json
-```
-The output file is `weights/yolov3_quant_fix_reshape.tflite`.
-Now, you can run 
-```
-python3 tflite_detect.py --weights weights/yolov3_quant_fix_reshape.tflite
-``` 
-to detect objects in an image.
-
-## Auxiliary Files
-- **ONNX inference and detection:** `onnx_infer.py` and `onnx_detect.py`.
-- **TensorFlow inference and detection:** `tf_infer.py` and `tf_detect.py`.
-- **TF Lite inference, detection and debug:** `tflite_infer.py`, `tflite_detect.py` 
-and `tflite_debug.py`.
-
-## Known Issues
-- **The conversion code does not work with tensorflow==1.14.0:** Running prep.py cause protobuf error (Channel order issue in Conv2D).
-- **fix_reshape.py does not fix shape attributes in TFLite tensors, which may cause unknown side effects.**
-
-## TODO
-- [x] **support quantized model**
 
 ## Acknowledgement
 We borrow PyTorch code from [ultralytics/yolov3](https://github.com/ultralytics/yolov3), 
